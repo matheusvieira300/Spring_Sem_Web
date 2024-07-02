@@ -15,9 +15,10 @@ public class Episodio {
         this.temporada = numeroTemporada;
         this.titulo = dadosEpisodio.titulo();
         this.numeroEpisodio = dadosEpisodio.numero();
+        
         try{
              this.avaliacao = Double.valueOf(dadosEpisodio.avaliacao());//para transformar num double/converter
-        } catch(NumberFormatException ex){
+        } catch(NumberFormatException ex){ // se ele pegar uma avaliação N/A
             this.avaliacao = 0.0;
         }
        
@@ -68,7 +69,7 @@ public class Episodio {
         this.dataLancamento = dataLancamento;
     }
 
-    @Override
+    @Override //pra exibir todos os campos
     public String toString() {
         return "temporada=" + temporada + ", titulo=" + titulo + ", numeroEpisodio=" + numeroEpisodio
                 + ", avaliacao=" + avaliacao + ", dataLancamento=" + dataLancamento;

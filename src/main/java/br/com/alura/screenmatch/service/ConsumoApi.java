@@ -15,8 +15,8 @@ public class ConsumoApi {// interessante manter uma classe apenas para o consumo
                     .build();
             HttpResponse<String> response = null;
             try {
-                response = client
-                        .send(request, HttpResponse.BodyHandlers.ofString());
+                response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (InterruptedException e) {

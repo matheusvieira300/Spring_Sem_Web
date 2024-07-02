@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 
 public class Principal {
 
-    private Scanner leitura = new Scanner(System.in);
+    private Scanner leitura = new Scanner(System.in);//input do teclado
 
     private ConsumoApi consumo = new ConsumoApi();
     private ConverteDados conversor = new ConverteDados();
-    private final String ENDERECO = "https://www.omdbapi.com/?t=";
+    private final String ENDERECO = "https://www.omdbapi.com/?t="; //padrão de escrita pra constantes é UPPERCASE
     private final String API_KEY = "&apikey=e5dadcc8";
 
     public void exibeMenu() {
@@ -38,11 +38,11 @@ public class Principal {
 
         
         System.out.println("Digite o nome da série para busca ?");
-        var nomeSerie = leitura.nextLine();
+        var nomeSerie = leitura.nextLine(); // ler o que for escrito
 
         var consumoApi = new ConsumoApi();//se tacar var do lado esquerdo ele já vai reconhecer o tipo do objeto
 
-        var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
+        var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);//replace quando for espaço sobrepor para +
         DadosSerie dados = conversor.obterDados(json, DadosSerie.class);//dados recebe o conversor transformando o json no dados da classe record
 
         System.out.println(dados);
@@ -55,22 +55,23 @@ public class Principal {
             DadosTemporada dadosTemporada = conversor.obterDados(json, DadosTemporada.class);
             temporadas.add(dadosTemporada);
         }
-        temporadas.forEach(System.out::println);//percorrer a lista
+        temporadas.forEach(System.out::println);//percorrer a lista de temporadas
         temporadas.forEach(t -> System.out.println());// a mesma linha de cima só que de forma não resumida (argumentos) -> { corpo-da-função }
 
-        for (int i = 0; i < dados.totalDeTemporadas(); i++) {
-            List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();// pegando a temporada e os episódios  que estão lá
-            for (int j = 0; j < episodiosTemporada.size(); j++) {
-                System.out.println(episodiosTemporada.get(j).titulo());//pegando o título de cada episódio
-            }
-        }
+        // for (int i = 0; i < dados.totalDeTemporadas(); i++) {
+        //     List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();// pegando a temporada e os episódios  que estão lá
+        //     for (int j = 0; j < episodiosTemporada.size(); j++) {
+        //         System.out.println(episodiosTemporada.get(j).titulo());//pegando o título de cada episódio apenas
+        //     }
+        // }
 
         //atráves do forEach dentro do parenteses o java já irá saber que você irá trabalhar com um dado do tipo temporadas.
+        //só é possivel pegar um parâmetro por vez
         temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));// nessa linha lambda é possível fazer tudo que está na linha acima comentada
 
-        //List<String> nomes = Arrays.asList("Jaque" , "Iasmin", "Paulo", "Rodrigo", "Nico");
+        //List<String> nomes = Arrays.asList("Jaque" , "Iasmin", "Paulo", "Rodrigo", "Nico"); //criando lista já com inserção
 
-        //stream serve para operações encadeadas
+        //stream serve para operações encadeadas e gerar uma nova Lista
         // nomes.stream()
         //         .sorted()//sorted para ordenar alfabeticamente
         //         .limit(3)//para impor limite e aparecer apenas os três primeiros
@@ -80,9 +81,9 @@ public class Principal {
 
         //Lista dadosEpisodios vai possuir todos os dados de todas as temporadas
         List<DadosEpisodio> dadosEpisodios = temporadas.stream()
-            .flatMap(t -> t.episodios().stream())
+            .flatMap(t -> t.episodios().stream())// usar uma lista dentro de outra lista
             //.toList() Lista imutável não dá pra retirar nem adicionar nada
-            .collect(Collectors.toList());//possível adicionar e remover
+            .collect(Collectors.toList());//possível adicionar e remover algo, diferente do apenas .toList
         
         // System.out.println("\n Top 10 episódios");
         // //operação encadeada stream
@@ -91,7 +92,7 @@ public class Principal {
         //     .peek(e -> System.out.println("Primeiro filtro(N/A)" + e))//para ver cada etapa da operação encadeada
         //     .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())//para comparar a avaliação e o reversed para inverter de forma decrescente
         //     .peek(e -> System.out.println("Ordenação: " + e))
-        //     .limit(10)
+        //     .limit(10)//limite de dados encontrados
         //     .peek(e -> System.out.println("Limite: " + e))
         //     .map(e -> e.titulo().toUpperCase())
         //     .peek(e -> System.out.println("Mapeamento: " + e))
@@ -109,10 +110,10 @@ public class Principal {
         // var trechoTitulo = leitura.nextLine();
 
         // //Optional pode ou não conter um valor nulo
-        // Optional <Episodio> episodioBuscado = episodios.stream()
+        // Optional <Episodio> episodioBuscado = episodios.stream() //toUpperCase deixar todas as referências em maiúsculo
         //     .filter(e -> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))//para verificar a primeira referência que contém parte deste título
         //     .findFirst();//para representar sempre o mesmo resultado
-        // if(episodioBuscado.isPresent()){
+        // if(episodioBuscado.isPresent()){ // verifica de forma booleana se a referência existe
         //     System.out.println("Episódio encontrado!");
         //     System.out.println("Temporada: " + episodioBuscado.get().getTemporada());//para pegar o episódio no Optional
         // } else {
@@ -129,11 +130,11 @@ public class Principal {
         // DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");//para apresentar a data no formato brasileiro
 
         // episodios.stream()
-        //     .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+        //     .filter(e -> e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca)) //dataDeLançamento depois da data definida
         //     .forEach(e -> System.out.println(
         //         "Temporada: " + e.getTemporada() +
         //             "Episódio: " + e.getTitulo() +
-        //             "Data Lançamento: " + e.getDataLancamento().format(formatador)
+        //             "Data Lançamento: " + e.getDataLancamento().format(formatador)// adicionando o formatador
         //     ));
 
         Map<Integer, Double> avalicoesPorTemporada = episodios.stream()
@@ -142,6 +143,7 @@ public class Principal {
                     Collectors.averagingDouble(Episodio::getAvaliacao)));//para realizar um agrupamento de dados pegando as avaliações por temporada
         System.out.println(avalicoesPorTemporada);
 
+        //uma classe específica do java que pega as estatísticas
         DoubleSummaryStatistics est = episodios.stream()//para pegar estatísticas em Double
                 .filter(e -> e.getAvaliacao() > 0.0)
                 .collect(Collectors.summarizingDouble(Episodio::getAvaliacao));//para pegar as estatísticas 
